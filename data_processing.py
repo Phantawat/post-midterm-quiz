@@ -108,9 +108,10 @@ class Table:
         self.table.append(dict)
 
     def update_row(self, primary_attribute, primary_attribute_value, update_attribute, update_value):
-        self.table[primary_attribute] = primary_attribute_value
-        self.table[update_attribute] = update_value
-
+        for i in self.table:
+            if i[primary_attribute]:
+                i[primary_attribute] = primary_attribute_value
+                i[update_attribute] = update_value
     def __str__(self):
         return self.table_name + ':' + str(self.table)
 
@@ -122,3 +123,16 @@ avg_worldwide = table1.filter(lambda x: x['Genre'] == 'Comedy').aggregate(lambda
 print(f'Average: {avg_worldwide}')
 audience_score = table1.filter(lambda x: x['Genre'] == 'Drama').aggregate(lambda x: min(x), 'Audience score %')
 print(f"Minimum score: {audience_score}")
+
+dict = {}
+dict['Film'] = 'The Shape of Water'
+dict['Genre'] = 'Fantasy'
+dict['Lead Studio'] = 'Fox'
+dict['Audience score %'] = '72'
+dict['Profitability'] = '9.765'
+dict['Rotten Tomatoes %'] = '92'
+dict['Worldwide Gross'] = '195.3'
+dict['Year'] = '2017'
+print(dict)
+my_db.insert(dict)
+table1.update_row('Film', 'A Serious Man', 'Year', '2022')
