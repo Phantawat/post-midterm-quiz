@@ -3,6 +3,13 @@ import csv, os
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+movie = []
+with open(os.path.join(__location__, 'movies.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        movie.append(dict(r))
+    print(movie)
+
 class DB:
     def __init__(self):
         self.database = []
@@ -97,6 +104,21 @@ class Table:
             pivot_table.append([item, aggregate_val_list])
         return pivot_table
 
+    def insert_row(self, dict):
+        self.table.append(dict)
+
+    def update_row(self, primary_attribute, primary_attribute_value, update_attribute, update_value):
+        self.table[primary_attribute] = primary_attribute_value
+        self.table[update_attribute] = update_value
+
     def __str__(self):
         return self.table_name + ':' + str(self.table)
 
+
+table1 = Table('movie', movie)
+my_db = DB()
+my_db.insert(table1)
+avg_worldwide = table1.filter(lambda x: x['Genre'] == 'Comedy').aggregate(lambda x: sum(x)/len(x), 'Worldwide Gross')
+print(f'Average: {avg_worldwide}')
+audience_score = table1.filter(lambda x: x['Genre'] == 'Drama').aggregate(lambda x: min(x), 'Audience score %')
+print(f"Minimum score: {audience_score}")
