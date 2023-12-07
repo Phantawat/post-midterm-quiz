@@ -136,3 +136,4 @@ dict['Year'] = '2017'
 print(dict)
 my_db.insert(dict)
 table1.update_row('Film', 'A Serious Man', 'Year', '2022')
+print(table1)
